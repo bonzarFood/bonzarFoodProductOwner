@@ -13,22 +13,19 @@ import 'package:owner_web/services/providers.dart';
 import 'package:owner_web/services/wholesale_api_client.dart';
 
 void main() {
-  test(
-    'product creation sends a generated hex ID and retries collisions',
-    () async {
-      final api = _RecordingProductApiClient()..conflictsRemaining = 1;
-      addTearDown(api.close);
-      final repository = ApiRepository(api);
+  test('product creation lets the backend generate the product ID', () async {
+    final api = _RecordingProductApiClient();
+    addTearDown(api.close);
+    final repository = ApiRepository(api);
 
-      await repository.createProduct(
-        Product(name: 'Test product', quantity: 3),
-      );
+    await repository.createProduct(Product(name: 'Test product', quantity: 3));
 
-      expect(api.attemptedIds, hasLength(2));
-      expect(api.attemptedIds, everyElement(matches(RegExp(r'^[0-9A-F]{6}$'))));
-      expect(api.attemptedIds[0], isNot(api.attemptedIds[1]));
-    },
-  );
+    expect(api.sentPayload, {
+      'name': 'Test product',
+      'quantity': 3,
+      'active': true,
+    });
+  });
 
   testWidgets('owner login has no demo bypass and exposes password options', (
     tester,
@@ -349,15 +346,10 @@ class _TestApiRepository extends ApiRepository {
 }
 
 class _RecordingProductApiClient extends WholesaleApiClient {
-  int conflictsRemaining = 0;
-  final attemptedIds = <String>[];
+  Map<String, Object?> sentPayload = const {};
 
   @override
   Future<void> createProduct(Map<String, Object?> product) async {
-    attemptedIds.add(product['id']! as String);
-    if (conflictsRemaining > 0) {
-      conflictsRemaining--;
-      throw const ApiException(409, 'Product ID already exists.');
-    }
+    sentPayload = Map<String, Object?>.from(product);
   }
 }
