@@ -32,4 +32,4 @@ jobs:
         run: flutter test
 
       - name: Build web release
-        run: flutter build web --release --base-href /owner_web/
+        run: flutter build web --release --base-href /owner_web/ --dart-define=API_BASE_URL=https://bonzarfoodproductbackend-production.up.railway.app/api/v1
