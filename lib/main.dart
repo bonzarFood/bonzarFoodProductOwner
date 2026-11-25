@@ -440,20 +440,23 @@ class _OwnerAppState extends ConsumerState<OwnerApp> {
               const Divider(height: 1),
               Expanded(
                 child: LayoutBuilder(
-                  builder: (context, constraints) => Scrollbar(
-                    controller: _desktopVerticalController,
-                    thumbVisibility: true,
-                    child: SingleChildScrollView(
+                  builder: (context, constraints) => Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Scrollbar(
                       controller: _desktopVerticalController,
-                      child: SizedBox(
-                        width: constraints.maxWidth,
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: constraints.maxHeight,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: _pageContent(),
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        controller: _desktopVerticalController,
+                        child: SizedBox(
+                          width: constraints.maxWidth - 12,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: constraints.maxHeight,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: _pageContent(),
+                            ),
                           ),
                         ),
                       ),
