@@ -38,7 +38,7 @@ Future<Uint8List> buildSaleInvoicePdf(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Text(
-            'BONZAR',
+            'BONZAR FOOD PRODUCTS',
             style: pw.TextStyle(
               color: PdfColors.teal800,
               fontSize: 14,
